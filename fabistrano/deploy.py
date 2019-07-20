@@ -1,3 +1,4 @@
+import datetime
 from fabric.api import env, sudo, run, put, task
 from fabistrano.helpers import with_defaults
 
@@ -37,16 +38,15 @@ def permissions():
 @with_defaults
 def setup():
     """Prepares one or more servers for deployment"""
-    sudo_run("mkdir -p %(domain_path)s/{releases,shared}" % { 'domain_path':env.domain_path })
-    sudo_run("mkdir -p %(shared_path)s/{system,log}" % { 'shared_path':env.shared_path })
+    sudo_run("mkdir -p %(domain_path)s/{releases, shared}" % { 'domain_path':env.domain_path })
+    sudo_run("mkdir -p %(shared_path)s" % { 'shared_path':env.shared_path })
     permissions()
 
 @with_defaults
 def checkout():
     """Checkout code to the remote servers"""
-    from time import time
-    env.current_release = "%(releases_path)s/%(time).0f" % { 'releases_path':env.releases_path, 'time':time() }
-    run("cd %(releases_path)s; git clone -b %(git_branch)s -q %(git_clone)s %(current_release)s" % \
+    env.current_release = "%(releases_path)s/%(time).0f" % { 'releases_path':env.releases_path, 'time': datetime.datetime.now().strftime('%Y%m%d%H%M%S') }
+    run("cd %(releases_path)s; git clone -b %(git_branch)s -q %(git_clone)s %(current_release)s; rm -rf .git*" % \
         { 'releases_path':env.releases_path,
           'git_clone':env.git_clone,
           'current_release':env.current_release,
@@ -70,7 +70,14 @@ def update_code():
 @with_defaults
 def symlink():
     """Updates the symlink to the most recently deployed version"""
-    run("ln -nfs %(shared_path)s/log %(current_release)s/log" % { 'shared_path':env.shared_path, 'current_release':env.current_release })
+    for linked_dir in env.shared_dirs:
+        run("mkdir -p %(current_release)s/%(linked_dir)s" % { 'linked_dir':linked_dir, 'current_release':env.current_release })
+        run("rm -rf %(current_release)s/%(linked_dir)s" % { 'linked_dir':linked_dir, 'current_release':env.current_release })
+        run("ln -s %(shared_path)s/%(linked_dir)s %(current_release)s/%(linked_dir)s" % { 'linked_dir':linked_dir, 'shared_path':env.shared_path, 'current_release':env.current_release })
+
+    for linked_path in env.shared_files:
+        run("ln -sf %(shared_path)s/%(linked_path)s %(current_release)s/%(linked_path)s" % { 'linked_path':linked_path, 'shared_path':env.shared_path, 'current_release':env.current_release })
+
 
 @with_defaults
 def set_current():

@@ -3,8 +3,7 @@ from fabric.api import run, env
 
 
 def dir_exists(dir):
-    # return run('[ -d %s ] && echo 1 || echo 0' % dir) == '1'
-    pass
+    return run('[ -d %s ] && echo 1 || echo 0' % dir) == '1'
 
 def with_defaults(func):
     """A decorator that sets all defaults for a task."""
@@ -17,6 +16,8 @@ def with_defaults(func):
         env.setdefault('remote_owner', 'www-data')
         env.setdefault('remote_group', 'www-data')
         env.setdefault('pip_install_command', 'pip install -r requirements.txt')
+        env.setdefault('shared_dirs', [])
+        env.setdefault('shared_files', [])
 
 
         env.setdefault('domain_path', "%(base_dir)s/%(app_name)s" % \
