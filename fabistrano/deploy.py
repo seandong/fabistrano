@@ -15,13 +15,14 @@ def sudo_run(*args, **kwargs):
 @with_defaults
 def restart():
     """Restarts your application"""
+    run("cd %(current_path)s" % { 'current_path': env.current_path })
     try:
         run("touch %(current_release)s/%(wsgi_path)s" % \
                 { 'current_release': env.current_release,
                   'wsgi_path': env.wsgi_path })
     except AttributeError:
         try:
-            sudo_run(env.restart_cmd)
+            run(env.restart_cmd)
         except AttributeError:
             pass
 
@@ -88,7 +89,7 @@ def set_current():
 @with_defaults
 def update_env():
     """Update servers environment on the remote servers"""
-    sudo_run("cd %(current_release)s; %(pip_install_command)s" % { 'current_release':env.current_release, 'pip_install_command':env.pip_install_command })
+    run("cd %(current_release)s; %(pip_install_command)s" % { 'current_release':env.current_release, 'pip_install_command':env.pip_install_command })
     permissions()
 
 @task
