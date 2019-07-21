@@ -95,10 +95,10 @@ def update_env():
 @with_defaults
 def cleanup():
     """Clean up old releases"""
-    if len(env.releases) > 3:
+    if len(env.releases) > env.max_releases:
         directories = env.releases
         directories.reverse()
-        del directories[:3]
+        del directories[:env.max_releases]
         env.directories = ' '.join([ "%(releases_path)s/%(release)s" % { 'releases_path':env.releases_path, 'release':release } for release in directories ])
         run("rm -rf %(directories)s" % { 'directories':env.directories })
 

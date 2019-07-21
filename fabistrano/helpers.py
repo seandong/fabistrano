@@ -18,6 +18,7 @@ def with_defaults(func):
         env.setdefault('pip_install_command', 'pip install -r requirements.txt')
         env.setdefault('shared_dirs', [])
         env.setdefault('shared_files', [])
+        env.setdefault('max_releases', 3)
 
 
         env.setdefault('domain_path', "%(base_dir)s/%(app_name)s" % \
