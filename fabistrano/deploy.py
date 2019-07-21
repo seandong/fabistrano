@@ -21,7 +21,7 @@ def restart():
                   'wsgi_path': env.wsgi_path })
     except AttributeError:
         try:
-            run(env.restart_cmd)
+            sudo_run(env.restart_cmd)
         except AttributeError:
             pass
 
@@ -87,7 +87,7 @@ def set_current():
 @with_defaults
 def update_env():
     """Update servers environment on the remote servers"""
-    run("cd %(current_release)s; %(pip_install_command)s" % { 'current_release':env.current_release, 'pip_install_command':env.pip_install_command })
+    sudo_run("cd %(current_release)s; %(pip_install_command)s" % { 'current_release':env.current_release, 'pip_install_command':env.pip_install_command })
     permissions()
 
 @task
