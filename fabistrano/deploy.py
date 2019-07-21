@@ -56,8 +56,8 @@ def checkout():
 def update():
     """Copies your project and updates environment and symlink"""
     update_code()
-    update_env()
     symlink()
+    update_env()
     set_current()
     permissions()
 
