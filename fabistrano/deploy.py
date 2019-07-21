@@ -60,6 +60,7 @@ def update():
     update_env()
     set_current()
     permissions()
+    cleanup()
 
 @task
 def update_code():
