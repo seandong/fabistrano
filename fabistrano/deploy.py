@@ -39,7 +39,7 @@ def permissions():
 @with_defaults
 def setup():
     """Prepares one or more servers for deployment"""
-    sudo_run("mkdir -p %(domain_path)s/{releases, shared}" % { 'domain_path':env.domain_path })
+    sudo_run("mkdir -p %(domain_path)s/{releases,shared}" % { 'domain_path':env.domain_path })
     sudo_run("mkdir -p %(shared_path)s" % { 'shared_path':env.shared_path })
     permissions()
 
