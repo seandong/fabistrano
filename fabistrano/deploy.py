@@ -47,7 +47,7 @@ def setup():
 def checkout():
     """Checkout code to the remote servers"""
     env.current_release = "%(releases_path)s/%(ts)s" % { 'releases_path':env.releases_path, 'ts': datetime.datetime.now().strftime('%Y%m%d%H%M%S') }
-    run("cd %(releases_path)s; git clone -b %(git_branch)s -q %(git_clone)s %(current_release)s; cd %(current_release)s; rm -rf .git*" % \
+    run("cd %(releases_path)s; git clone -b %(git_branch)s -q -v %(git_clone)s %(current_release)s; cd %(current_release)s; rm -rf .git*" % \
         { 'releases_path':env.releases_path,
           'git_clone':env.git_clone,
           'current_release':env.current_release,
